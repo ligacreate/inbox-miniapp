@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="light dark">
+<title>Инбокс</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="style.css?v=1794387142">
+</head>
+<body>
+<div class="app" id="app">
+ <div class="screens">
+
+  <section class="screen on" id="s-today">
+   <div class="dayline"><div class="date" id="day-date"></div><div class="dnav"><button data-day="-1" aria-label="Предыдущий день">‹</button><button data-day="1" aria-label="Следующий день">›</button></div></div>
+   <h1 id="day-title">Сегодня</h1>
+   <div id="day-body">
+   <h2>Встречи <span>из календаря</span></h2>
+   <div id="meetings"><div class="skeleton"></div></div>
+   <h2><b id="tasks-h">Дела на сегодня</b> <span id="cnt"></span></h2>
+   <div id="tasks"><div class="skeleton"></div></div>
+   <h2>Ждёт решения</h2>
+   <div class="go" data-go="razbor"><div class="n" id="go-n">·</div><div><div class="t" id="go-t">Разбор</div><div class="s" id="go-s"></div></div><div class="arr">›</div></div>
+   </div>
+  </section>
+
+  <section class="screen" id="s-razbor">
+   <div class="date" data-today></div>
+   <h1>Разбор</h1>
+   <div class="tabs"><button class="tab on" data-deck="task">Дела<i></i></button><button class="tab" data-deck="link">Сохранёнки<i></i></button><button class="tab" data-deck="someday" hidden>Однажды<i></i></button></div>
+   <div class="prog"><b></b></div>
+   <div class="stage"><div class="empty"><h3>Колода пуста</h3><p id="empty-p">Всё разложено. Новое придёт из бота.</p></div></div>
+   <div class="actions"><button class="btn big later-btn">Однажды</button><button class="btn undo" aria-label="Вернуть последнее">↶</button><button class="btn trash" aria-label="В корзину">✕</button><button class="btn big take-btn">Беру</button></div>
+   <div class="tray"></div>
+   <input type="date" class="datepick" id="datepick" tabindex="-1">
+  </section>
+
+  <section class="screen" id="s-ideas">
+   <div class="date" id="ideas-n"></div>
+   <h1>Идеи</h1>
+   <label class="search">⌕ <input id="q" type="search" placeholder="Искать во всём: идеи, дела, ссылки" autocomplete="off"></label>
+   <div class="filters" id="idea-filters"></div>
+   <div id="ideas"><div class="skeleton"></div></div>
+  </section>
+
+  <section class="screen" id="s-someday">
+   <div class="date" id="someday-n"></div>
+   <h1>Однажды</h1>
+   <div class="revisit" id="revisit" hidden><b>Раз в месяц: всё ещё хочется?</b><p>Пять самых старых карточек. Одна минута, и список снова живой.</p><button id="revisit-go">Перебрать пять</button></div>
+   <div class="filters" id="someday-filters" style="margin-top:16px"><button class="tab on" data-f="all">Всё</button><button class="tab" data-f="task">Дела</button><button class="tab" data-f="link">Ссылки</button></div>
+   <div id="someday"><div class="skeleton"></div></div>
+  </section>
+
+  <div class="scrim"></div>
+  <div class="sheet">
+   <div class="grab"></div>
+   <div id="compose">
+    <textarea id="cap" placeholder="Что у вас? Дело, мысль, встреча или ссылка"></textarea>
+    <div class="guess" id="guess">Попробуйте: «созвон с Мариной в четверг в 15»</div>
+    <div class="kinds"><button class="tab" data-k="task">Дело</button><button class="tab" data-k="idea">Идея</button><button class="tab" data-k="meet">Встреча</button><button class="tab" data-k="link">Ссылка</button></div>
+    <div class="sheet-row"><button class="btn mic" aria-label="Надиктовать"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="btn big take-btn" id="save">Сохранить</button></div>
+   </div>
+   <div id="confirm" class="confirm" hidden></div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="sync" id="sync" hidden></div>
+ </div>
+
+ <nav class="bar">
+  <button class="ti on" data-go="today"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>Сегодня</button>
+  <button class="ti" data-go="razbor"><span class="wrap"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="3"/><path d="M8 2.5h8"/></svg><span class="badge" id="badge"></span></span>Разбор</button>
+  <button class="ti" data-open="capture" aria-label="Записать"><div class="plus"><svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M12 5v14M5 12h14"/></svg></div></button>
+  <button class="ti" data-go="ideas"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>Идеи</button>
+  <button class="ti" data-go="someday"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1.5"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4"/></svg>Однажды</button>
+ </nav>
+</div>
+<script src="config.js?v=1794387142"></script>
+<script src="api.js?v=1794387142"></script>
+<script src="app.js?v=1794387142"></script>
+</body>
+</html>
